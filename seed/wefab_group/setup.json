@@ -1,0 +1,29 @@
+{
+  "tenant_id": "a9577fda-5b68-47e5-8e0e-4e0829c64468",
+  "tenant": "WeFAB group",
+  "entities": [
+    {
+      "code": "WF",
+      "name": "Weld Engineering & Fabrication",
+      "customer_numbers": {
+        "existing": {"prefix": "WFC-", "start": 1001, "end": 4999},
+        "new": {"prefix": "WFC-", "start": 5001}
+      }
+    },
+    {
+      "code": "CJ",
+      "name": "C and J Fabrication",
+      "customer_numbers": {
+        "existing": {"prefix": "CJC-", "start": 1001, "end": 4999},
+        "new": {"prefix": "CJC-", "start": 5001}
+      }
+    }
+  ],
+  "users": [
+    {"name": "Jose Rodriguez", "level": "admin", "entity": null, "email": ""},
+    {"name": "Rider Leon", "level": "manager", "entity": "WF", "email": ""},
+    {"name": "Daniel Esqueda", "level": "sales", "entity": "WF", "email": ""},
+    {"name": "Diego Salazar", "level": "sales", "entity": "WF", "email": ""},
+    {"name": "John Toscano", "level": "sales", "entity": "CJ", "email": ""}
+  ]
+}
