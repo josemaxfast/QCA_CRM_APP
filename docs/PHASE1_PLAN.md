@@ -1,6 +1,6 @@
-# QCA CRM: Phase 1 plan (draft for approval)
+# QCA CRM: Phase 1 plan (approved 2026-11-17)
 
-Prepared 2026-11-17. **No code has been written yet.** This plan follows CLAUDE.md (v4) and copies the patterns already used in QCA Quote (branch `phase1-cost-engine`), so the two apps are built and run the same way.
+Prepared 2026-11-17 and approved the same day. This plan follows CLAUDE.md (v5) and copies the patterns already used in QCA Quote (branch `phase1-cost-engine`), so the two apps are built and run the same way.
 
 ---
 
@@ -116,7 +116,7 @@ The audit log is **append-only**: the app can add entries but never edit or dele
 
 Every table has `tenant_id`. Every business table also has `entity_id`.
 
-## 4. Customer numbers (proposal: please approve or change)
+## 4. Customer numbers (approved)
 Customers in QCA Quote have no numbers yet, so the CRM creates every number. Quote numbers stay as they are in QCA Quote: `WF-26-0001` style.
 
 | | WeFAB | C&J |
@@ -143,9 +143,15 @@ Customers in QCA Quote have no numbers yet, so the CRM creates every number. Quo
 | Approve imports, the review queue, reconciliation | No | Own company | All |
 
 Starting users (as seed data):
-- **WeFAB:** Daniel Esqueda and Diego Salazar, Sales/Estimators.
-- **C&J:** John Toscano, Sales/Estimator.
-- The Sales Managers and the top Admins are **still needed** (see the questions at the end).
+- **WeFAB:**
+    - Rider Leon, Sales Manager.
+    - Daniel Esqueda and Diego Salazar, Sales/Estimators.
+- **C&J:**
+    - John Toscano, Sales/Estimator.
+    - No Sales Manager for now, so the Admins manage C&J.
+- **Admin:** Jose Rodriguez, with more to be named.
+- Account owners are always a salesperson or Sales Manager of that company. Admins don't own accounts.
+- Work email addresses are still needed for sign-in.
 
 ## 6. How QCA Quote and the CRM talk
 
@@ -216,8 +222,15 @@ These copy QCA Quote's dark theme, top navigation, red and gold field warnings, 
 3. **Account (customer 360):** details, contacts, RFQs and quotes, activity timeline, win rate, quoted vs won, last contact, next task, and tax certificates.
 4. **Contact:** details and timeline.
 5. **Review queue:** quote events that couldn't be matched.
-6. **Import:** upload a CSV, review the matches and duplicates, then approve.
-7. **Settings:** stages, loss reasons, follow-up rules, numbering, users.
+6. **Upload customers** (on the customer list):
+    - Download the CSV template, fill it in, and upload it.
+    - **Salesperson is a required column.** A row whose salesperson isn't a salesperson or Sales Manager of that company is rejected with a clear message.
+    - Review the matches and duplicates, then approve.
+7. **Leaderboards:**
+    - Company leaderboard: all users of that company see it.
+    - Group leaderboard: Admins only.
+    - Both rank by quotes sent, won $, and win rate, for this month or a chosen period, and exclude intercompany work.
+8. **Settings:** stages, loss reasons, follow-up rules, numbering, users.
 
 ## 9. Step-by-step build (each step = small commits + tests + a plain-language summary)
 | # | Step | Done when |
@@ -230,9 +243,9 @@ These copy QCA Quote's dark theme, top navigation, red and gold field warnings, 
 | 6 | Quote-event endpoint, inbox, review queue | Duplicate, out-of-order and unmatched tests pass |
 | 7 | Follow-up rules and the daily check | Rule tests pass for days 2 / 7 / 15 / 18 and the revision restart |
 | 8 | Customer API for QCA Quote | QCA Quote can look up customers (tested with a stand-in) |
-| 9 | Import from QCA Quote's customer list, and the CSV import with review | Imported customers get WFC-1xxx and CJC-1xxx numbers |
+| 9 | Import from QCA Quote's customer list, and the customer upload (template with required salesperson) with review | Imported customers get WFC-1xxx and CJC-1xxx numbers, and rows without a valid salesperson are rejected |
 | 10 | Weekly reconciliation | Report tested against a stand-in QCA Quote |
-| 11 | Screens: My day, pipeline, account, contact | Checked in a browser, with screenshots sent to you |
+| 11 | Screens: My day, pipeline, account, contact, leaderboards | Checked in a browser, with screenshots sent to you |
 | 12 | Azure setup as code, **not deployed** | Cost estimate written; nothing is created until you approve it |
 
 Steps 1–7 don't depend on QCA Quote at all. Steps 8–10 need the QCA Quote changes in QUOTE-APP-CHANGES.md. Until then, a stand-in plays QCA Quote's part in the tests.
@@ -248,9 +261,6 @@ The extra pieces would be:
 - private file storage for tax certificates: under $1 a month
 - a once-a-day scheduled job: pennies
 
-## 11. Questions for you
-1. **Customer number format:** OK with `WFC-1001` for existing customers and `WFC-5001`+ for new ones (and `CJC-…` for C&J)?
-2. **Sales Managers:** who is the Sales Manager for WeFAB, and who for C&J? Can one person be a manager for one company and a salesperson at the same time?
-3. **Top Admins:** who are the ~3 Admins?
-4. **WeFAB account owners:** each existing WeFAB customer needs either Daniel or Diego as owner. A two-column list (customer, owner) is enough. All C&J customers go to John.
-5. **Leaderboard:** you mentioned healthy internal competition. Should I add a simple leaderboard to Phase 1, by salesperson within each company: quotes sent, won $, and win rate this month? It's small. Otherwise it waits for the Phase 3 dashboards.
+## 11. Still needed
+1. **WeFAB account owners:** which existing customers belong to Daniel and which to Diego? A two-column list (customer, salesperson) is enough. All C&J customers go to John.
+2. **Sign-in emails:** the work email address of each user, and the names of any other top Admins.

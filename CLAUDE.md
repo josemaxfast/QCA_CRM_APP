@@ -1,4 +1,4 @@
-# QCA CRM: Project Brief (v4, 2026-11-17)
+# QCA CRM: Project Brief (v5, 2026-11-17)
 
 Read this file fully before planning or writing code. It is the source of truth for this repository.
 
@@ -69,7 +69,7 @@ Numbering rules:
 - Customers in QCA Quote have **no customer numbers today**, so the CRM creates them all.
 - **At launch,** the CRM imports QCA Quote's existing customers and gives them numbers from the "existing" range. Matching uses name and Fulcrum ID, and an Admin reviews the matches before anything is saved.
 - **After launch,** new customers get numbers from a separate "new" range, and each account stores an "existed at go-live" flag. That makes new-to-the-business customers easy to spot.
-- The proposed format is `WFC-1001`+ for existing and `WFC-5001`+ for new (`CJC-…` for C&J). It's awaiting approval. The format and ranges are settings, per entity.
+- **Format (approved):** `WFC-1001`–`WFC-4999` for existing customers and `WFC-5001`+ for new ones (`CJC-…` for C&J). The format and ranges are settings, per entity.
 - Quote numbers stay as QCA Quote makes them (`WF-YY-NNNN`, `CJ-YY-NNNN`).
 - Customer numbers are unique within an entity.
 - QCA Quote reads customers and contacts from the CRM API. It stores the CRM customer number on its side, so both apps refer to the same customer the same way.
@@ -145,8 +145,16 @@ For now, all certificates are from **California**. Build per-state settings so *
     - The re-engage list.
     - The weekly reconciliation report.
     - Sales Managers see these dashboards for their own entity, and Admins see them for every entity.
-6. **Import:** CSV import of accounts and contacts, with a duplicate check and Admin review before anything is saved. Sales-history import from Fulcrum comes in Phase 3.
-7. **Settings** (Admins, and Sales Managers for their own entity): pipeline stages, loss reasons, follow-up rules, customer-number format, users and roles.
+6. **Import (upload customers):** an "Upload customers" button on the customer list.
+    - It offers a downloadable CSV template.
+    - **The salesperson column is required** on every row and must name an active salesperson or Sales Manager of that company. A row without a valid salesperson is rejected with a clear message.
+    - There is a duplicate check, and a person approves the batch before anything is saved.
+    - Sales-history import from Fulcrum comes in Phase 3.
+7. **Leaderboard:**
+    - **Company leaderboard:** visible to everyone in that company. It ranks its salespeople by quotes sent, won $, and win rate for this month, and a period can be picked.
+    - **Group leaderboard:** visible to Admins only, covering both companies.
+    - Intercompany work is excluded from both.
+8. **Settings** (Admins, and Sales Managers for their own entity): pipeline stages, loss reasons, follow-up rules, customer-number format, users and roles.
 
 ## QCA's own use (Phase 4)
 QCA will run its own separate CRM deployment, not inside WeFAB's Azure, to sell the suite to other manufacturers:
@@ -184,8 +192,8 @@ QCA will run its own separate CRM deployment, not inside WeFAB's Azure, to sell 
     - Accounts (including intercompany and tax certificates), contacts, opportunities, activities and tasks.
     - Customer import from QCA Quote with the existing numbers, and the CRM customer API.
     - Quote events in from QCA Quote, with follow-up automation.
-    - The My day, pipeline board and account pages.
-    - CSV import of accounts and contacts.
+    - The My day, pipeline board, account pages and leaderboards.
+    - Customer upload (CSV template with a required salesperson column).
     - The weekly reconciliation report.
 2. **Microsoft 365:** Outlook email logging, calendar, and sending quotes from the user's mailbox.
 3. **Dashboards and Fulcrum:** the Admin dashboards, Fulcrum sales-history import, and the re-engage list.
@@ -207,11 +215,16 @@ Phase 1 depends on the QCA Quote changes in `QUOTE-APP-CHANGES.md`, especially t
 - Starting salespeople: WeFAB has Daniel Esqueda and Diego Salazar. C&J has John Toscano. These are seed data, not code.
 - Salespeople can view their coworkers' accounts and activity (read-only) within their own entity.
 - Tax certificates: California now, with Texas and North Carolina prepared.
+- Customer-number format approved: `WFC-1001`+ existing, `WFC-5001`+ new (`CJC-…` for C&J).
+- People:
+    - **Sales Manager for WeFAB:** Rider Leon.
+    - **C&J:** no Sales Manager for now, so the Admins manage C&J.
+    - **Admin:** Jose Rodriguez, with more Admins to be named later.
+- Account owners are always salespeople or Sales Managers of that company. Admins don't own accounts.
+- Leaderboards are in Phase 1: one per company for its users, and one across the group for Admins.
 
 ## Open decisions (ask before building the affected feature)
-- Approve the customer-number format (`WFC-1001`+ existing, `WFC-5001`+ new).
-- Who are the Sales Managers (WeFAB, C&J) and the top Admins?
 - Which WeFAB customers belong to Daniel and which to Diego? All C&J customers go to John.
-- Should a salesperson leaderboard be part of Phase 1?
+- The other top Admins (besides Jose Rodriguez), and everyone's work email addresses, for sign-in.
 
 The full Phase 1 plan is in `docs/PHASE1_PLAN.md`.

@@ -19,3 +19,18 @@
 **Weekly reconciliation** with QCA Quote. It only produces a report.
 
 **Tax certificates:** California now, with Texas and North Carolina prepared.
+
+## 2026-11-17: Plan approved, with these answers
+
+**Customer numbers:** the format is approved: `WFC-1001`+ for existing customers and `WFC-5001`+ for new ones (`CJC-…` for C&J).
+
+**People**
+- Sales Manager for WeFAB: Rider Leon.
+- C&J has no Sales Manager for now, so the Admins manage it.
+- Admin: Jose Rodriguez.
+
+**Customer upload:** a button on the customer list, with a CSV template. The salesperson column is required.
+
+**Leaderboards:** one per company (visible to that company) and one across the group (Admins only), both in Phase 1.
+
+**Account owners** must be a salesperson or Sales Manager of the account's company. Admins don't own accounts.
