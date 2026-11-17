@@ -28,8 +28,8 @@ Before anything else: show me a plan, and a backup and rollback plan for the dat
 5. Customers: add a setting, CUSTOMER_SOURCE = local | crm.
    - With local, the app works as it does today.
    - With crm, the customer and contact pickers read from the CRM API.
-   - Keep the existing customer numbers and the Fulcrum customer ID on the customer record, and store the CRM customer number.
-   - Provide an export of the existing customer list, with customer numbers and Fulcrum IDs, for the CRM's first import.
+   - Keep the Fulcrum customer ID on the customer record, and store the CRM customer number (for example WFC-1001). The CRM creates all customer numbers.
+   - Provide an export of the existing customer list, with Fulcrum IDs, for the CRM's first import.
    - Quote numbers stay owned by this app.
 
 6. Add an "Open in CRM" link on each quote. It shows only when a CRM URL is configured.

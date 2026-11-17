@@ -1,9 +1,9 @@
-# QCA CRM: Project Brief (v3, 2026-11-17)
+# QCA CRM: Project Brief (v4, 2026-11-17)
 
 Read this file fully before planning or writing code. It is the source of truth for this repository.
 
 ## What this is
-The QCA CRM is the second app in the QCA suite, after **QCA Quote** (already live). It manages customers, contacts, RFQs, follow-ups and the sales pipeline, and connects to QCA Quote so quotes and customer activity live in one place.
+The QCA CRM is the second app in the QCA suite, after **QCA Quote** (in its proof-of-concept phase; repository `josemaxfast/QCA-Quoting-Software`, branch `phase1-cost-engine`). It manages customers, contacts, RFQs, follow-ups and the sales pipeline, and connects to QCA Quote so quotes and customer activity live in one place.
 - **Owner:** Quality Change Advisors, LLC (QCA). QCA owns all code and IP. Keep the repository under a QCA account.
 - **Funding and hosting:** WeFAB pays for this development and hosts it in WeFAB's Azure account. That doesn't change ownership: the code, designs and IP belong to QCA.
 - **First users:** Weld Engineering & Fabrication (WeFAB) and C and J Fabrication (C&J). They are two companies under the same parent (the WeFAB group).
@@ -26,7 +26,7 @@ QCA builds a **clean core**: the general CRM features every manufacturer needs, 
 - **Roles (three levels):**
     - **Sales/Estimator:**
         - Owns the accounts they create. The creator is set as the account owner automatically.
-        - Can view their entity's accounts, but can edit only the accounts, opportunities and tasks they own.
+        - Can view (read-only) their coworkers' accounts and activity in the same entity, to encourage healthy internal competition. They can edit only the accounts, opportunities and tasks they own.
     - **Sales Manager:**
         - Has Admin capabilities, limited to their own entity.
         - Can view and edit all of their entity's records, reassign account owners, and manage settings, users and follow-up rules for that entity.
@@ -66,8 +66,11 @@ Each app owns one kind of number, so the two never clash:
 - **QCA Quote owns quote numbers.** It sends each quote number back to the CRM in its quote events.
 
 Numbering rules:
-- **At launch,** the CRM imports QCA Quote's existing customers and **keeps their existing customer numbers**, in the same format. Matching uses name and Fulcrum ID, and an Admin reviews the matches before anything is saved.
-- **After launch,** new customers created in the CRM get numbers in a **new format** that can never collide with an old one. That makes "new since the system went live" customers easy to spot. The format is a setting (prefix + sequence, per entity). The exact format is an open decision.
+- Customers in QCA Quote have **no customer numbers today**, so the CRM creates them all.
+- **At launch,** the CRM imports QCA Quote's existing customers and gives them numbers from the "existing" range. Matching uses name and Fulcrum ID, and an Admin reviews the matches before anything is saved.
+- **After launch,** new customers get numbers from a separate "new" range, and each account stores an "existed at go-live" flag. That makes new-to-the-business customers easy to spot.
+- The proposed format is `WFC-1001`+ for existing and `WFC-5001`+ for new (`CJC-…` for C&J). It's awaiting approval. The format and ranges are settings, per entity.
+- Quote numbers stay as QCA Quote makes them (`WF-YY-NNNN`, `CJ-YY-NNNN`).
 - Customer numbers are unique within an entity.
 - QCA Quote reads customers and contacts from the CRM API. It stores the CRM customer number on its side, so both apps refer to the same customer the same way.
 
@@ -114,9 +117,9 @@ All timings are **calendar days**, including weekends, so they can run fully aut
 - A tax-exempt certificate expiring within 30 days creates an alert for an Admin.
 
 ## Tax-exempt certificates
-Rules differ by state. Some resale or exemption certificates never expire, others must be renewed every year or every few years. The app doesn't hard-code a rule:
-- Store the certificate file, issuing state, date received, and expiry date.
-- If the certificate has no expiry date, set a **review date one year after it was received** (an Admin can change the default). The 30-day alert uses the expiry date or the review date.
+For now, all certificates are from **California**. Build per-state settings so **Texas** and **North Carolina** can be added without code changes. Rules differ by state. Some resale or exemption certificates never expire, others must be renewed every year or every few years. The app doesn't hard-code a rule:
+- Store the certificate file, issuing state, type (resale, partial manufacturing exemption, other), date received, and expiry date.
+- If the certificate has no expiry date, set a **review date one year after it was received**. The default can be changed per state. The 30-day alert uses the expiry date or the review date.
 - The certificate file is sensitive. Store it in private storage, visible to Admins and the account's own entity only.
 
 ## Microsoft 365 integration (Phase 2)
@@ -200,9 +203,15 @@ Phase 1 depends on the QCA Quote changes in `QUOTE-APP-CHANGES.md`, especially t
 - Three user levels: Sales/Estimator (owns the accounts they enter), Sales Manager (Admin rights within their own entity), and Admin (all entities).
 - Follow-ups on days 2, 7 and 15 after a quote is sent. Quotes expire after 21 days.
 - The CRM and QCA Quote are reconciled weekly, and the reconciliation only produces a report.
+- QCA Quote customers have no numbers today, so the CRM numbers every customer.
+- Starting salespeople: WeFAB has Daniel Esqueda and Diego Salazar. C&J has John Toscano. These are seed data, not code.
+- Salespeople can view their coworkers' accounts and activity (read-only) within their own entity.
+- Tax certificates: California now, with Texas and North Carolina prepared.
 
 ## Open decisions (ask before building the affected feature)
-- What is QCA Quote's current customer-number format, and what format should new CRM customers use?
-- Who owns each existing account at launch (a salesperson for each one)?
-- Can a Sales/Estimator view other salespeople's accounts in the same entity (read-only), or only their own? The current default is read-only, which helps avoid duplicate accounts.
-- In which states do customers hold tax-exempt certificates? This affects the default review period.
+- Approve the customer-number format (`WFC-1001`+ existing, `WFC-5001`+ new).
+- Who are the Sales Managers (WeFAB, C&J) and the top Admins?
+- Which WeFAB customers belong to Daniel and which to Diego? All C&J customers go to John.
+- Should a salesperson leaderboard be part of Phase 1?
+
+The full Phase 1 plan is in `docs/PHASE1_PLAN.md`.
